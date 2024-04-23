@@ -77,7 +77,22 @@ function App() {
         <h2>Lista de elementos</h2>
         <ul>
           {items.map((item) => {
-            return <li key={item.id}>{item.text}</li>;
+            return (
+              <li key={item.id}>
+                {item.text}
+                <button
+                  onClick={() => {
+                    setItems((prevItems) => {
+                      return prevItems.filter(
+                        (currentItem) => currentItem.id !== item.id
+                      );
+                    });
+                  }}
+                >
+                  Eliminar elemento
+                </button>
+              </li>
+            );
           })}
         </ul>
       </section>

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./App.css";
 
+type ItemId = `${string}-${string}-${string}-${string}-${string}`;
 interface Item {
-  id: string;
+  id: ItemId;
   timestamp: number;
   text: string;
 }
@@ -60,6 +61,13 @@ function App() {
     // Se resetea el input value:
     input.value = "";
   };
+
+  // Se crea una función que devuelve una función, para que cada elemento "genere" su propia función para eliminarse
+  const createHandleRemoveItem = (id: ItemId) => () => {
+    setItems((prevItems) => {
+      return prevItems.filter((currentItem) => currentItem.id !== id);
+    });
+  };
   return (
     <main>
       <aside>
@@ -75,26 +83,22 @@ function App() {
       </aside>
       <section>
         <h2>Lista de elementos</h2>
-        <ul>
-          {items.map((item) => {
-            return (
-              <li key={item.id}>
-                {item.text}
-                <button
-                  onClick={() => {
-                    setItems((prevItems) => {
-                      return prevItems.filter(
-                        (currentItem) => currentItem.id !== item.id
-                      );
-                    });
-                  }}
-                >
-                  Eliminar elemento
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        {items.length === 0 ? (
+          <strong>No hay elementos</strong>
+        ) : (
+          <ul>
+            {items.map((item) => {
+              return (
+                <li key={item.id}>
+                  {item.text}
+                  <button onClick={createHandleRemoveItem(item.id)}>
+                    Eliminar elemento
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </section>
     </main>
   );
